@@ -17,3 +17,7 @@ captures
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 node_modules/
+
+# Material privado de preparación para la defensa.
+GUIA_DEMO.md
+VERIFICACION_RUBRICA.md
