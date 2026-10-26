@@ -15,17 +15,6 @@ dependencies {
     implementation(project(":shared"))
 
     implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.core.ktx.compatible)
-
-    implementation(libs.compose.uiToolingPreview)
-    implementation(libs.compose.material3)
-    debugImplementation(libs.compose.uiTooling)
-    implementation(libs.firebase.database)
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.firestore)
-    implementation(libs.firebase.messaging)
-    implementation(libs.kotlinx.coroutines.play.services)
-    implementation(libs.androidx.lifecycle.viewmodel.compose.android)
 }
 
 android {

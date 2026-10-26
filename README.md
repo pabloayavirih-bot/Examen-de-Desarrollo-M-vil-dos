@@ -62,4 +62,4 @@ El APK se genera en `androidApp/build/outputs/apk/debug/androidApp-debug.apk`.
 - Se usó una sola colección `tasks` de Cloud Firestore para que E25-3 y E50-5 compartan datos reales.
 - `addSnapshotListener` refresca la lista sin recargar la pantalla y entrega los cambios `ADDED` que usan las notificaciones de E50-5.
 - La preferencia `notifications_muted` se guarda localmente con `SharedPreferences`.
-- Se usaron `ViewModel` y clases pequeñas (`TaskRepository`, `AppNotifications`) para separar UI, Firestore y notificaciones sin introducir una arquitectura compleja.
+- El código del examen está en el módulo `shared` y sigue capas `data`, `domain` y `presentation`: Firestore queda en `data`, entidades, contrato y casos de uso en `domain`, y pantallas, ViewModels y notificaciones en `presentation`.

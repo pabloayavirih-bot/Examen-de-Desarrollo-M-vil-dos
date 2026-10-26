@@ -1,4 +1,3 @@
-import dev.detekt.gradle.Detekt
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -6,54 +5,9 @@ plugins {
     alias(libs.plugins.androidMultiplatformLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
-    alias(libs.plugins.detekt)
-    alias(libs.plugins.kotlinSerialization)
-    alias(libs.plugins.ksp)
-
-}
-
-detekt {
-    source.setFrom(
-        "src/commonMain/kotlin",
-        "src/androidMain/kotlin",
-        "src/iosMain/kotlin"
-    )
-    config.setFrom(files("${rootDir}/config/detekt/detekt.yml"))
-    buildUponDefaultConfig = true
-    ignoreFailures = false
-}
-
-tasks.withType<Detekt>().configureEach {
-    include("**/*.kt", "**/*.kts")
-    exclude("**/build/**")
-}
-
-tasks.register<Detekt>("detektAll") {
-    description = "Analiza todo el código fuente KMP"
-    group = "verification"
-
-    // Incluye todo el directorio src del módulo
-    setSource(files("src"))
-    include("**/*.kt", "**/*.kts")
-    exclude("**/build/**")
-
-    reports {
-        html.required.set(true)
-        sarif.required.set(true)
-    }
 }
 
 kotlin {
-    listOf(
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "Shared"
-            isStatic = true
-        }
-    }
-    
     android {
        namespace = "org.ucb.appp1.shared"
        compileSdk = libs.versions.android.compileSdk.get().toInt()
@@ -68,47 +22,26 @@ kotlin {
        withHostTest {
            isIncludeAndroidResources = true
        }
-       withDeviceTestBuilder {
-           sourceSetTreeName = "test"
-       }.configure {
-           instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-       }
     }
     
     sourceSets {
         androidMain.dependencies {
+            implementation(libs.androidx.activity.compose)
+            implementation(libs.androidx.core.ktx.compatible)
+            implementation(libs.androidx.lifecycle.viewmodel.compose.android)
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.compose.uiTooling)
-            implementation(libs.koin.android)
-            implementation(libs.ktor.client.okhttp)
-            implementation(libs.firebase.database)
+            implementation(project.dependencies.platform(libs.firebase.bom))
+            implementation(libs.firebase.firestore)
         }
         commonMain.dependencies {
-            implementation(project(":designSystem"))
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)
             implementation(libs.compose.ui)
             implementation(libs.compose.components.resources)
             implementation(libs.compose.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.viewmodelCompose)
-            implementation(libs.androidx.lifecycle.runtimeCompose)
-            implementation(libs.koin.core)
-            implementation(libs.koin.compose)
-            implementation(libs.koin.compose.viewmodel)
-            implementation("io.arrow-kt:arrow-core:1.2.1")
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.serialization.kotlinx.json)
-
         }
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-        }
-        iosMain.dependencies {
-            implementation(libs.ktor.client.darwin)
-        }
-
     }
 }
 
