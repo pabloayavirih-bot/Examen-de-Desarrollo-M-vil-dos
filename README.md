@@ -1,31 +1,65 @@
-This is a Kotlin Multiplatform project targeting Android, iOS.
+# Ejercicios de Firebase y notificaciones
 
-* [/iosApp](./iosApp/iosApp) contains an iOS application. Even if you’re sharing your UI with Compose Multiplatform,
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+**Combinación elegida:** E50-5 + E25-3 + E25-5 = **100 puntos**.
 
-* [/shared](./shared/src) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - [commonMain](./shared/src/commonMain/kotlin) is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    the [iosMain](./shared/src/iosMain/kotlin) folder would be the right place for such calls.
-    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./shared/src/jvmMain/kotlin)
-    folder is the appropriate location.
+## Integrantes
 
-### Running the apps
+- Jorge Pablo Ayaviri Hinojosa
+- Jonathan Luizaga Zapata
+- Rafael Alejandro Quisbert Paco
+- Bryan Sejas Espinoza
+- José Alejandro Terrazas Antezana
 
-Use the run configurations provided by the run widget in your IDE's toolbar. You can also use these commands and options:
+## Qué hace la aplicación
 
-- Android app: `./gradlew :androidApp:assembleDebug`
-- iOS app: open the [/iosApp](./iosApp) directory in Xcode and run it from there.
+La pantalla principal permite abrir tres ejercicios independientes:
 
-### Running tests
+1. **E25-3 — CRUD de tareas en Firestore.** Agrega tareas con los campos `titulo`, `completada` y `timestamp`; las lista en tiempo real, permite marcarlas como completadas y eliminarlas.
+2. **E25-5 — Notificación local.** Crea un `NotificationChannel`, solicita `POST_NOTIFICATIONS` en Android 13 o superior y muestra el texto **“Hola desde la app”**. Al tocar el aviso se abre la app.
+3. **E50-5 — Listener y avisos de tareas.** Mantiene un listener de Firestore para detectar tareas nuevas, genera una notificación y ofrece un interruptor para silenciarlas mediante `SharedPreferences`. Al tocar la notificación se abre directamente el CRUD de tareas.
 
-Use the run button in your IDE's editor gutter, or run tests using Gradle tasks:
+## Preparación de Firebase (necesaria una sola vez)
 
-- Android tests: `./gradlew :shared:testAndroidHostTest`
-- iOS tests: `./gradlew :shared:iosSimulatorArm64Test`
+El archivo `androidApp/google-services.json` ya corresponde al proyecto de Firebase de la aplicación. En la consola de Firebase, habilitar **Cloud Firestore** en modo de prueba y publicar temporalmente estas reglas para la demostración:
 
----
+```text
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /tasks/{taskId} {
+      allow read, write: if true;
+    }
+  }
+}
+```
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+Estas reglas son solamente para la práctica académica; no deben usarse en producción. La misma versión está en `firestore.rules`.
+
+## Ejecutar
+
+1. Abrir la carpeta `tareaCotizacion` con Android Studio y esperar la sincronización de Gradle.
+2. Conectar un teléfono con depuración USB o iniciar un emulador.
+3. Seleccionar el dispositivo y ejecutar el módulo `androidApp`.
+4. En Android 13 o superior, aceptar el permiso de notificaciones desde el ejercicio E25-5.
+
+Desde consola también se puede generar el APK con:
+
+```powershell
+.\gradlew.bat :androidApp:assembleDebug
+```
+
+El APK se genera en `androidApp/build/outputs/apk/debug/androidApp-debug.apk`.
+
+## Prueba rápida
+
+1. Abrir **E25-5**, conceder el permiso y tocar “Mostrar Hola desde la app”. Verificar la notificación y tocarla.
+2. Abrir **E25-3**, escribir una tarea, agregarla, marcarla como completada y eliminarla.
+3. Abrir **E50-5**, dejar desactivado “Silenciar notificaciones” y agregar una tarea desde E25-3 (u otro cliente conectado a la misma colección). Debe aparecer un aviso; tocarlo abre las tareas.
+4. Activar el interruptor de silencio y agregar otra tarea: no debe aparecer aviso.
+
+## Decisiones técnicas
+
+- Se usó una sola colección `tasks` de Cloud Firestore para que E25-3 y E50-5 compartan datos reales.
+- `addSnapshotListener` refresca la lista sin recargar la pantalla y entrega los cambios `ADDED` que usan las notificaciones de E50-5.
+- La preferencia `notifications_muted` se guarda localmente con `SharedPreferences`.
+- Se usaron `ViewModel` y clases pequeñas (`TaskRepository`, `AppNotifications`) para separar UI, Firestore y notificaciones sin introducir una arquitectura compleja.

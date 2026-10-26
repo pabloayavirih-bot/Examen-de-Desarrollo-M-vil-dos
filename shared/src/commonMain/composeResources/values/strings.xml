@@ -1,0 +1,12 @@
+<resources>
+    <string name="character_id">ID del personaje</string>
+    <string name="search">Buscar</string>
+    <string name="error_label">Error: %1$s</string>
+    <string name="name_label">Nombre: %1$s</string>
+    <string name="height_label">Altura: %1$s</string>
+    <string name="mass_label">Peso: %1$s</string>
+    <string name="hair_label">Color de cabello: %1$s</string>
+    <string name="skin_label">Color de piel: %1$s</string>
+    <string name="eyes_label">Color de ojos: %1$s</string>
+    <string name="gender_label">Género: %1$s</string>
+</resources>

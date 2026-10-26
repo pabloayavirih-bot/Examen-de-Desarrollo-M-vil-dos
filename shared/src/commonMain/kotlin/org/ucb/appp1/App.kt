@@ -1,6 +1,6 @@
 package org.ucb.appp1
 
-import androidx.compose.material3.MaterialTheme
+import org.ucb.appp1.designsystem.AppTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import org.ucb.appp1.starwars.presentation.screen.StarWarsScreen
@@ -8,7 +8,7 @@ import org.ucb.appp1.starwars.presentation.screen.StarWarsScreen
 @Composable
 @Preview
 fun App() {
-    MaterialTheme {
+    AppTheme {
         StarWarsScreen()
     }
 }

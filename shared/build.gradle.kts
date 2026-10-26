@@ -81,8 +81,10 @@ kotlin {
             implementation(libs.compose.uiTooling)
             implementation(libs.koin.android)
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.firebase.database)
         }
         commonMain.dependencies {
+            implementation(project(":designSystem"))
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)
@@ -110,6 +112,3 @@ kotlin {
     }
 }
 
-dependencies {
-    androidRuntimeClasspath(libs.compose.uiTooling)
-}
